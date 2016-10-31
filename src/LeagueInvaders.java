@@ -3,6 +3,7 @@ import javax.swing.Timer;
 
 public class LeagueInvaders {
 GamePanel panel;
+
 	JFrame frame;
 	int width = 500;
 	int height = 800;
@@ -15,6 +16,7 @@ public static void main(String[] args) {
 LeagueInvaders(){
 	panel = new GamePanel();
 	 frame = new JFrame();
+
 	 setup();
 	
 }
