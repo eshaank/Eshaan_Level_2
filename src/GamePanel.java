@@ -19,10 +19,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Font titleFont;
 	Font titleFont2;
 	Rocketship rocket;
-
+    ObjectManager manager = new ObjectManager();
 	GamePanel() {
 
 		rocket = new Rocketship(250, 700, 50, 50);
+		manager.addObject(rocket);
 		titleFont = new Font("Arial", Font.PLAIN, 54);
 		titleFont2 = new Font("Arial", Font.PLAIN, 30);
 		timer = new Timer(1000 / 60, this);
@@ -67,7 +68,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, 500, 800);
 
-		rocket.draw(g);
+		manager.draw(g);
 	}
 
 	void drawEndState(Graphics g) {
@@ -92,7 +93,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	void updateGameState() {
-		rocket.update();
+	manager.update();
+	manager.manageEnemies();
 	}
 
 	void updateEndState() {
@@ -101,7 +103,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		repaint();
+		
 
 		if (currentState == MENU_STATE) {
 			updateMenuState();
@@ -110,6 +112,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		} else if (currentState == END_STATE) {
 			updateEndState();
 		}
+		repaint();
 	}
 
 	@Override
@@ -130,8 +133,23 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			rocket.right();
+			System.out.println("Right key");
+		}
+		else if( e.getKeyCode() == KeyEvent.VK_LEFT){
+			rocket.left();
+		}
+		else if(e.getKeyCode() == KeyEvent.VK_UP){
+			rocket.up();
+		}
+		else if(e.getKeyCode() == KeyEvent.VK_DOWN){
+			rocket.down();
+		}
+		else if(e.getKeyCode() == KeyEvent.VK_SPACE){
+			manager.addObject(new Projectile(rocket.x + 23, rocket.y, 10, 10));
 
 		}
+		updateGameState();
 	}
 
 	@Override

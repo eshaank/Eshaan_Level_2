@@ -5,7 +5,7 @@ public class LeagueInvaders {
 GamePanel panel;
 
 	JFrame frame;
-	int width = 500;
+static	int width = 500;
 	int height = 800;
 public static void main(String[] args) {
 	  new LeagueInvaders();
