@@ -1,7 +1,10 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.Random;
 
 public class Aliens extends GameObject{
+	boolean left = true;
+	
 Aliens(int x, int y, int width, int height){
 	this.x = x;
     this.y = y;
@@ -11,11 +14,28 @@ Aliens(int x, int y, int width, int height){
 void update(){
 	super.update();
 y++;
+
+ if(x <= 0){
+	left = false;
+ }
+if(x>= 500 - width){
+	left = true;
+}
+
+ 
+  if(left){
+	 x = x-new Random().nextInt(5);
+
+ }
+  else {
+		 x = x+new Random().nextInt(5);
+
+  }
 	}
 
 void draw(Graphics g) {
-	g.setColor(Color.RED);
-	g.fillRect(x, y, width, height);
-System.out.println(x + y);
+	g.drawImage(GamePanel.alienImg, x, y, width, height, null);
+
+
 }
 }

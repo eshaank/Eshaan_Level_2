@@ -6,7 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -20,12 +23,24 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Font titleFont2;
 	Rocketship rocket;
     ObjectManager manager = new ObjectManager();
+    public static BufferedImage alienImg;
+	public static BufferedImage rocketImg;
+	public static BufferedImage bulletImg;
 	GamePanel() {
 
 		rocket = new Rocketship(250, 700, 50, 50);
 		manager.addObject(rocket);
 		titleFont = new Font("Arial", Font.PLAIN, 54);
 		titleFont2 = new Font("Arial", Font.PLAIN, 30);
+		try {
+			alienImg = ImageIO.read(this.getClass().getResourceAsStream("alien.png"));
+			rocketImg = ImageIO.read(this.getClass().getResourceAsStream("rocket.png"));
+			bulletImg = ImageIO.read(this.getClass().getResourceAsStream("bullet.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		timer = new Timer(1000 / 60, this);
 	}
 
@@ -85,16 +100,26 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 		g.setFont(titleFont2);
 		g.setColor(Color.BLACK);
-		g.drawString("You killed 0 Aliens", 120, 325);
+		g.drawString("You killed " + manager.getScore() + " Aliens", 120, 325);
 	}
 
 	void updateMenuState() {
+
+	
 
 	}
 
 	void updateGameState() {
 	manager.update();
 	manager.manageEnemies();
+	manager.checkCollision();
+	if(!rocket.isAlive){
+		currentState = END_STATE;
+		manager.reset();
+		rocket = new Rocketship(250, 700, 50, 50);
+	manager.addObject(rocket);
+	}
+	
 	}
 
 	void updateEndState() {
@@ -148,6 +173,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		else if(e.getKeyCode() == KeyEvent.VK_SPACE){
 			manager.addObject(new Projectile(rocket.x + 23, rocket.y, 10, 10));
 
+		}
+		if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE){
+			currentState = MENU_STATE;
 		}
 		updateGameState();
 	}
